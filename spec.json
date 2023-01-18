@@ -1,0 +1,415 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Products",
+    "description": "Api for Alterra Project for Movie and Cast",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "description": "Base URL for Get Movie and Cast Data API",
+      "url": "https://localhost:1323/api/v1"
+    }
+  ],
+  "paths": {
+    "/movies": {
+      "get": {
+        "description": "Get all movies in the databases",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Get all movie data succeed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "integer"
+                      },
+                      "title": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                },
+                "example": [
+                  {
+                    "id": 1,
+                    "title": "Avengers"
+                  },
+                  { "id": 3, "title": "Booty Pussy" }
+                ]
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "description": "Add new data for movie",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Success adding new movie data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MovieInput"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/movies/{movieID}": {
+      "get": {
+        "description": "Search movie with specific id",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/MovieID"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success search movie with spesific ID",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Movie"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "description": "Update movie with specific ID",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/MovieID"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MovieInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success update movie data with ID",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Movie"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "description": "Delete movie data with specific ID",
+        "parameters": [{ "$ref": "#/components/parameters/MovieID" }],
+        "responses": {
+          "200": {
+            "description": "Succeess delete movie data with specific ID",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "message": {
+                        "type": "integer"
+                      }
+                    }
+                  }
+                },
+                "example": {
+                  "message": "Success delete cast"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/casts": {
+      "get": {
+        "description": "Get all casts in the databases",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Get all casts data succeed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "integer"
+                      },
+                      "name": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                },
+                "example": [
+                  {
+                    "id": 1,
+                    "name": "DPR IAN"
+                  },
+                  { "id": 4, "title": "Zendaya" }
+                ]
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "description": "Add new data for cast database",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Success adding new cast data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CastInput"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/casts/{castID}": {
+      "get": {
+        "description": "Search cast with specific id",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/CastID"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success search cast with spesific ID",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Cast"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "description": "Update cast with specific ID",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/CastID"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CastInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success update cast data with ID",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Cast"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "description": "Delete cast data with specific ID",
+        "parameters": [{ "$ref": "#/components/parameters/CastID" }],
+        "responses": {
+          "200": {
+            "description": "Succeess delete cast data with specific ID",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "message": {
+                        "type": "integer"
+                      }
+                    }
+                  }
+                },
+                "example": {
+                  "message": "Success delete cast"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Movie": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "title": {
+            "type": "string"
+          },
+          "language": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          },
+          "rating": {
+            "type": "number"
+          },
+          "Casts": {
+            "$ref": "#components/schemas/CastArray"
+          }
+        }
+      },
+      "MovieInput": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "description": "title of the movie",
+            "minLength": 1
+          },
+          "language": {
+            "type": "string",
+            "description": "language used in the movie",
+            "minLength": 1
+          },
+          "status": {
+            "type": "string",
+            "description": "Ongoing or Ended series of movie",
+            "minLength": 1
+          },
+          "rating": {
+            "type": "number",
+            "description": "rating of the movie"
+          }
+        }
+      },
+      "Cast": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "name": {
+            "type": "string"
+          },
+          "birth_place": {
+            "type": "string"
+          },
+          "birthday": {
+            "type": "string"
+          },
+          "rating": {
+            "type": "integer"
+          }
+        }
+      },
+      "CastArray": {
+        "type": "array",
+        "items": {
+          "$ref": "#components/schemas/Cast"
+        }
+      },
+      "CastInput": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "name of the cast",
+            "minLength": 1
+          },
+          "birth_place": {
+            "type": "string",
+            "description": "birth place of the cast",
+            "minLength": 1
+          },
+          "birthday": {
+            "type": "string",
+            "description": "birth day date of the cast",
+            "minLength": 1
+          },
+          "rating": {
+            "type": "integer",
+            "description": "rating of the cast"
+          }
+        }
+      }
+    },
+    "parameters": {
+      "MovieID": {
+        "name": "movieID",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "type": "integer"
+        },
+        "examples": {
+          "Avengers": {
+            "description": "Movie ID example to get Movie Avengers",
+            "value": 1
+          },
+          "Bullet Train": {
+            "description": "Movie ID example to get Movie Bullet Train",
+            "value": 2
+          }
+        }
+      },
+      "CastID": {
+        "name": "castID",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "type": "integer"
+        },
+        "examples": {
+          "Zendaya": {
+            "description": "Cast ID example to get Cast named Zendaya",
+            "value": 1
+          },
+          "The Rock": {
+            "description": "Cast ID example to get Cast named The Rock",
+            "value": 5
+          }
+        }
+      }
+    }
+  }
+}
