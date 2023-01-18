@@ -294,7 +294,7 @@
             "type": "number"
           },
           "Casts": {
-            "$ref": "#components/schemas/CastArray"
+            "$ref": "#/components/schemas/CastArray"
           }
         }
       },
@@ -345,7 +345,7 @@
       "CastArray": {
         "type": "array",
         "items": {
-          "$ref": "#components/schemas/Cast"
+          "$ref": "#/components/schemas/Cast"
         }
       },
       "CastInput": {
