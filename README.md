@@ -121,6 +121,22 @@ Request :
 }
 ```
 
+- Response :
+
+```json
+{
+  "Success": "boolean",
+  "Message": "string",
+  "Data": {
+    "id": "integer",
+    "name": "string",
+    "birth_place": "string",
+    "birthday": "datetime",
+    "rating": "integer"
+  }
+}
+```
+
 ## Delete Cast
 
 Request :
@@ -147,9 +163,10 @@ Request :
 - Method : GET
 - Endpoint : `/api/v1/movies`
 - Header :
+
   - Accept: application/json
 
-Response :
+- Response :
 
 ```json
 {
@@ -214,7 +231,7 @@ Request :
 }
 ```
 
-Response :
+- Response :
 
 ```json
 {
@@ -247,6 +264,22 @@ Request :
   "language": "string",
   "status": "integer",
   "rating": "integer"
+}
+```
+
+- Response :
+
+```json
+{
+  "Success": "boolean",
+  "Message": "string",
+  "Data": {
+    "id": "integer",
+    "title": "string",
+    "language": "string",
+    "status": "string",
+    "rating": "number"
+  }
 }
 ```
 
