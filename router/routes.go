@@ -6,7 +6,7 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-func routesAll(group *echo.Group, e *echo.Echo){
+func routesAll(group *echo.Group){
 	// Routing Movie
 	group.GET("/movies", controller.GetMoviesController)
 	group.GET("/movies/:id", controller.GetMovieDetailController)

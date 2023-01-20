@@ -18,6 +18,7 @@ func initMigrate() {
 	DB.AutoMigrate(&model.Movie{})
 	DB.AutoMigrate(&model.Cast{})
 	DB.AutoMigrate(&model.Movie_cast{})
+	DB.AutoMigrate(&model.User{})
 }
 
 func goDotEnvVariable(key string) string {
