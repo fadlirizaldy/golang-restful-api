@@ -1,11 +1,13 @@
 package controller
 
 import (
-	// "fmt"
 	"net/http"
 	"project_alterra/config"
+	"project_alterra/helper"
 	"project_alterra/middleware"
 	"project_alterra/model"
+
+	"golang.org/x/crypto/bcrypt"
 
 	"github.com/labstack/echo/v4"
 )
@@ -18,18 +20,30 @@ func UserRegister(c echo.Context) error{
 	email := c.FormValue("email")
 	password := c.FormValue("password")
 
+	pwd, _ := helper.GeneratePassword(password)
+
 	users := model.User{
 		Name: name,
 		Email: email,
-		Password: password,
+		Password: pwd,
 	}
 
+	// check if the forms are fulfilled
 	if name == "" || email == "" || password == "" {
 		return c.JSON(http.StatusBadRequest, echo.Map{
 			"message": "form not valid, please fill all the column",
 		})
 	}
 
+	// Checking where if the email already registered or not
+	errEmail := config.DB.Where("email = ?", users.Email).First(&users).Error
+	if errEmail == nil {
+		return c.JSON(http.StatusInternalServerError, map[string]interface{}{
+			"message": "Email already used",
+		})
+	}
+
+	// Save the data if the email not used
 	err := config.DB.Save(&users).Error
 
 	if err != nil {
@@ -47,19 +61,22 @@ func UserRegister(c echo.Context) error{
 
 func UserLogin(c echo.Context) error {
 	email := c.FormValue("email")
-	password := c.FormValue("password")
+	pwd := c.FormValue("password")
+
 
 	user := model.User{
 		Email: email,
-		Password: password,
+		Password: pwd,
 	}
 
-	err := config.DB.Where("email = ? AND password = ?", user.Email, user.Password).First(&user).Error
-	// fmt.Println(err)
-	if err != nil {
+	err := config.DB.Where("email = ?", user.Email).First(&user).Error
+
+	encryptionErr := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(pwd))
+
+	if err != nil || encryptionErr != nil{
 		return c.JSON(http.StatusInternalServerError, map[string]interface{}{
 			"message": "Failed to Login",
-			"error": err.Error(),
+			"error": "Email or password is invalid",
 		})
 	}
 
