@@ -10,7 +10,7 @@ import (
 func main() {
 
 	// Initansiasi DB
-	config.InitDB()
+	config.InitMigrate()
 
 	//Instansiasi server
 	e := router.New()

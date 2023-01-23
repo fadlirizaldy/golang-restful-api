@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"fmt"
 	"net/http"
 
 	"project_alterra/config"
@@ -12,13 +13,14 @@ import (
 
 func GetCastsController(c echo.Context) error {
 	// deklarasi lagi tipe struct untuk tipe general
+	DB := config.InitDB()
 	type allCasts struct{
 		Id       	int     `json:"id"`
 		Name    	string  `json:"name"`
 	}
 	var casts []allCasts
 
-	err := config.DB.Table("casts").Select("id","name").Find(&casts).Error
+	err := DB.Table("casts").Select("id","name").Find(&casts).Error
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, map[string]interface{}{
 			"message": err.Error(),
@@ -34,11 +36,12 @@ func GetCastsController(c echo.Context) error {
 }
 
 func GetCastDetailController(c echo.Context) error {
+	DB := config.InitDB()
 	var casts []model.Cast
 
 	id:= c.Param("id")
 
-	err := config.DB.Where("id = ?", id).First(&casts).Error 
+	err := DB.Where("id = ?", id).First(&casts).Error 
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, map[string]interface{}{
 			"message": err.Error(),
@@ -54,10 +57,11 @@ func GetCastDetailController(c echo.Context) error {
 }
 
 func CreateCastController(c echo.Context) error {
+	DB := config.InitDB()
 	casts := model.Cast{}
 	c.Bind(&casts)
 
-	err := config.DB.Save(&casts).Error
+	err := DB.Save(&casts).Error
 
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, map[string]interface{}{
@@ -76,17 +80,24 @@ func CreateCastController(c echo.Context) error {
 
 // delete user
 func DeleteCastByIdController(c echo.Context) error{
+	DB := config.InitDB()
 	casts := model.Cast{}
-	c.Bind(&casts)
+	// c.Bind(&casts)
 	id:= c.Param("id")
 
-	err := config.DB.Where("id = ?", id).Delete(&casts).Error
+	res := DB.Where("id = ?", id).Delete(&casts)
+	// In sql, deleting non existed record not count as an error
 
-	if err != nil {
+	if res.Error != nil {
 		return c.JSON(http.StatusInternalServerError, map[string]interface{}{
-			"message": err.Error(),
+			"message": res.Error,
+		})
+	} else if res.RowsAffected < 1 {
+		return c.JSON(http.StatusInternalServerError, map[string]interface{}{
+			"message": fmt.Sprintf("cast with id = %s doesn't exist", id),
 		})
 	}
+
 	return c.JSON(http.StatusOK, map[string]interface{}{
 		"messages": "Success delete cast",
 	})
@@ -94,12 +105,13 @@ func DeleteCastByIdController(c echo.Context) error{
 
 //update user
 func UpdateCastController(c echo.Context) error{
+	DB := config.InitDB()
 	casts := model.Cast{}
 	c.Bind(&casts)
 
 	id:= c.Param("id")
 
-	err := config.DB.Where("id = ?", id).Updates(&casts).Error
+	err := DB.Where("id = ?", id).Updates(&casts).Error
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, map[string]interface{}{
 			"message": err.Error(),

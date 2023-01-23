@@ -16,12 +16,13 @@ import (
 // 2. Buat Login
 
 func UserRegister(c echo.Context) error{
+	DB := config.InitDB()
 	name := c.FormValue("name")
 	email := c.FormValue("email")
 	password := c.FormValue("password")
 
 	pwd, _ := helper.GeneratePassword(password)
-
+	
 	users := model.User{
 		Name: name,
 		Email: email,
@@ -35,8 +36,7 @@ func UserRegister(c echo.Context) error{
 		})
 	}
 
-	// Checking where if the email already registered or not
-	errEmail := config.DB.Where("email = ?", users.Email).First(&users).Error
+	errEmail := DB.Where("email = ?", email).First(&users).Error
 	if errEmail == nil {
 		return c.JSON(http.StatusInternalServerError, map[string]interface{}{
 			"message": "Email already used",
@@ -44,7 +44,7 @@ func UserRegister(c echo.Context) error{
 	}
 
 	// Save the data if the email not used
-	err := config.DB.Save(&users).Error
+	err := DB.Save(&users).Error
 
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, map[string]interface{}{
@@ -69,7 +69,8 @@ func UserLogin(c echo.Context) error {
 		Password: pwd,
 	}
 
-	err := config.DB.Where("email = ?", user.Email).First(&user).Error
+	DB := config.InitDB()
+	err := DB.Where("email = ?", user.Email).First(&user).Error
 
 	encryptionErr := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(pwd))
 
@@ -85,7 +86,7 @@ func UserLogin(c echo.Context) error {
 
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, map[string]interface{}{
-			"message": "Failed to Login",
+			"message": "Failed to Login, Failed to generate Token",
 			"error": err.Error(),
 		})
 	}
@@ -93,7 +94,7 @@ func UserLogin(c echo.Context) error {
 	userResponse := model.UserResponse{Id: user.Id, Name: user.Name, Email: user.Email, Token: token}
 
 	return c.JSON(http.StatusOK, map[string]interface{}{
-		"messages": "Success Login!",
+		"message": "Success Login!",
 		"user" : userResponse,
 	})
 }

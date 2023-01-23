@@ -1,9 +1,9 @@
 package config
 
 import (
-	"fmt"
 	"log"
 	"os"
+	"regexp"
 
 	"project_alterra/model"
 
@@ -12,19 +12,15 @@ import (
 	"gorm.io/gorm"
 )
 
-var DB *gorm.DB
+const projectDirName = "project_alterra"
 
-func initMigrate() {
-	DB.AutoMigrate(&model.Movie{})
-	DB.AutoMigrate(&model.Cast{})
-	DB.AutoMigrate(&model.Movie_cast{})
-	DB.AutoMigrate(&model.User{})
-}
+func GoDotEnvVariable(key string) string {
 
-func goDotEnvVariable(key string) string {
-
+	projectName := regexp.MustCompile(`^(.*` + projectDirName + `)`)
+    currentWorkDirectory, _ := os.Getwd()
+    rootPath := projectName.Find([]byte(currentWorkDirectory))
 	// load .env file
-	err := godotenv.Load(".env")
+	err := godotenv.Load(string(rootPath) + `/.env`)
   
 	if err != nil {
 	  log.Fatalf("Error loading .env file")
@@ -33,24 +29,29 @@ func goDotEnvVariable(key string) string {
 	return os.Getenv(key)
   }
 
-func InitDB() {
+func InitDB() *gorm.DB{
 	// refer https://github.com/go-sql-driver/mysql#dsn-data-source-name for details
-	host := goDotEnvVariable("DB_HOST")
-	port := goDotEnvVariable("DB_PORT")
-	dbname := goDotEnvVariable("DB_NAME")
-	username := goDotEnvVariable("DB_USER")
-	password := goDotEnvVariable("DB_PASSWORD")
+	host := GoDotEnvVariable("DB_HOST")
+	port := GoDotEnvVariable("DB_PORT")
+	dbname := GoDotEnvVariable("DB_NAME")
+	username := GoDotEnvVariable("DB_USER")
+	password := GoDotEnvVariable("DB_PASSWORD")
 
 	// dsn := "root:@tcp(localhost:3306)/alterra_golang?charset=utf8mb4&parseTime=True&loc=Local"
 	dsn := username + ":" + password + "@tcp(" + host + ":" + port + ")/" + dbname + "?charset=utf8&parseTime=true&loc=Local"
 	var err error
-	DB, err = gorm.Open(mysql.Open(dsn), &gorm.Config{SkipDefaultTransaction: true})
+	DB, err := gorm.Open(mysql.Open(dsn), &gorm.Config{SkipDefaultTransaction: true})
 	// DB, err = gorm.Open("mysql", dsn)
 
-	fmt.Println("Connected to DB!")
 	if err != nil {
 		panic(err.Error())
 	}
+	// fmt.Println("Connected to DB!")
 
-	initMigrate()
+	return DB
+}
+
+func InitMigrate() {
+	DB := InitDB()
+	DB.AutoMigrate(&model.Movie{})
 }

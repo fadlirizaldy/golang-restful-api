@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"fmt"
 	"net/http"
 
 	"project_alterra/config"
@@ -10,6 +11,7 @@ import (
 )
 
 func GetMoviesController(c echo.Context) error {
+	DB := config.InitDB()
 	type allMovies struct{
 		Id       	int     `json:"id"`
 		Title    	string  `json:"title"`
@@ -17,7 +19,7 @@ func GetMoviesController(c echo.Context) error {
 	
 	var movies []allMovies
 
-	err := config.DB.Table("movies").Select("id","title").Find(&movies).Error
+	err := DB.Table("movies").Select("id","title").Find(&movies).Error
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, map[string]interface{}{
 			"message": err.Error(),
@@ -33,11 +35,12 @@ func GetMoviesController(c echo.Context) error {
 }
 
 func GetMovieDetailController(c echo.Context) error {
+	DB := config.InitDB()
 	var movie []model.Movie
 
 	id:= c.Param("id")
 
-	err := config.DB.Preload("Casts").Where("id = ?", id).First(&movie).Error 
+	err := DB.Preload("Casts").Where("id = ?", id).First(&movie).Error 
 
 	// err := config.DB.Where("id = ?", id).First(&movie).Error 
 	if err != nil {
@@ -55,10 +58,11 @@ func GetMovieDetailController(c echo.Context) error {
 }
 
 func CreateMovieController(c echo.Context) error {
+	DB := config.InitDB()
 	movie := model.Movie{}
 	c.Bind(&movie)
 
-	err := config.DB.Save(&movie).Error
+	err := DB.Save(&movie).Error
 
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, map[string]interface{}{
@@ -77,15 +81,21 @@ func CreateMovieController(c echo.Context) error {
 
 // delete user
 func DeleteMovieByIdController(c echo.Context) error{
+	DB := config.InitDB()
 	movie := model.Movie{}
-	c.Bind(&movie)
+	// c.Bind(&movie)
 	id:= c.Param("id")
 
-	err := config.DB.Where("id = ?", id).Delete(&movie).Error
+	res := DB.Where("id = ?", id).Delete(&movie)
+	// In sql, deleting non existed record not count as an error
 
-	if err != nil {
+	if res.Error != nil {
 		return c.JSON(http.StatusInternalServerError, map[string]interface{}{
-			"message": err.Error(),
+			"message": res.Error,
+		})
+	} else if res.RowsAffected < 1 {
+		return c.JSON(http.StatusInternalServerError, map[string]interface{}{
+			"message": fmt.Sprintf("movie with id = %s doesn't exist", id),
 		})
 	}
 	return c.JSON(http.StatusOK, map[string]interface{}{
@@ -95,12 +105,13 @@ func DeleteMovieByIdController(c echo.Context) error{
 
 //update user
 func UpdateMovieController(c echo.Context) error{
+	DB := config.InitDB()
 	movie := model.Movie{}
 	c.Bind(&movie)
 
 	id:= c.Param("id")
 
-	err := config.DB.Where("id = ?", id).Updates(&movie).Error
+	err := DB.Where("id = ?", id).Updates(&movie).Error
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, map[string]interface{}{
 			"message": err.Error(),
