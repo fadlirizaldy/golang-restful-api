@@ -99,7 +99,7 @@ func DeleteCastByIdController(c echo.Context) error{
 	}
 
 	return c.JSON(http.StatusOK, map[string]interface{}{
-		"messages": "Success delete cast",
+		"message": "Success delete cast",
 	})
 }
 

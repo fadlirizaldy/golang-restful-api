@@ -129,7 +129,7 @@ func TestUserRegister(t *testing.T) {
 		}
 	}
 
-	// TruncateUsersTable()
+	TruncateUsersTable()
 }
 
 func TestLoginUser (t *testing.T){

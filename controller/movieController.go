@@ -99,7 +99,7 @@ func DeleteMovieByIdController(c echo.Context) error{
 		})
 	}
 	return c.JSON(http.StatusOK, map[string]interface{}{
-		"messages": "Success delete movie",
+		"message": "Success delete movie",
 	})
 }
 
