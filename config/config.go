@@ -12,7 +12,7 @@ import (
 	"gorm.io/gorm"
 )
 
-const projectDirName = "project_alterra"
+const projectDirName = "golang-restful-api"
 
 func GoDotEnvVariable(key string) string {
 
@@ -53,5 +53,5 @@ func InitDB() *gorm.DB{
 
 func InitMigrate() {
 	DB := InitDB()
-	DB.AutoMigrate(&model.Movie{})
+	DB.AutoMigrate(&model.Movie{}, &model.Cast{}, &model.Movie_cast{}, &model.User{})
 }
