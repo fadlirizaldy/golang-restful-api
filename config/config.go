@@ -53,5 +53,5 @@ func InitDB() *gorm.DB{
 
 func InitMigrate() {
 	DB := InitDB()
-	DB.AutoMigrate(&model.Movie{})
+	DB.AutoMigrate(&model.Movie{},&model.Cast{}, &model.Movie_cast{}, &model.User{})
 }
