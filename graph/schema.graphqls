@@ -1,0 +1,29 @@
+# GraphQL schema example
+#
+# https://gqlgen.com/getting-started/
+
+type Cast {
+  id: ID!
+  name: String!
+  birth_place: String!
+  birthday: String!
+  rating: Int!
+}
+
+type Query {
+  casts: [Cast!]!
+  cast(id: ID!): Cast!
+  castDelete(id: ID!): Cast!
+}
+
+input CastInput {
+  name: String!
+  birth_place: String!
+  birthday: String!
+  rating: Int!
+}
+
+type Mutation {
+  createCast(input: CastInput!): Cast
+  editCast(id: ID!, input: CastInput!): Cast
+}
