@@ -100,7 +100,71 @@ mutation addNewMovie{
 
 To see the documentation with Swagger, please visit https://editor.swagger.io/ and put code in "spec.json" to it
 
+<i>Note: before try to request, do register and login to get jwt token</i>
+
 Here's the spec :
+
+### Register
+
+Request :
+
+- Method : PUT
+- Endpoint : `/register`
+- Header :
+  - Content-Type: application/json
+
+Body :
+
+```json
+{
+  "name": "string",
+  "email": "string",
+  "password": "string"
+}
+```
+
+Response :
+
+```json
+{
+  "success": "boolean",
+  "message": "string"
+}
+```
+
+### Login
+
+Request :
+
+- Method : PUT
+- Endpoint : `/register`
+- Header :
+  - Content-Type: application/json
+
+Body :
+
+```json
+{
+  "email": "string",
+  "password": "string"
+}
+```
+
+Response :
+
+```json
+{
+  "success": "boolean",
+  "user": {
+    "id": "integer",
+    "name": "string",
+    "email": "string",
+    "token": "string"
+  }
+}
+```
+
+---
 
 ### Get all casts
 
@@ -160,7 +224,8 @@ Request :
 - Header :
   - Content-Type: application/json
   - Accept: application/json
-- Body :
+
+Body :
 
 ```json
 {
@@ -196,7 +261,8 @@ Request :
 - Header :
   - Content-Type: application/json
   - Accept: application/json
-- Body :
+
+Body :
 
 ```json
 {
@@ -207,7 +273,7 @@ Request :
 }
 ```
 
-- Response :
+Response :
 
 ```json
 {
@@ -249,10 +315,9 @@ Request :
 - Method : GET
 - Endpoint : `/api/v1/movies`
 - Header :
+  - Accept : application/json
 
-  - Accept: application/json
-
-- Response :
+Response :
 
 ```json
 {
@@ -306,7 +371,8 @@ Request :
 - Header :
   - Content-Type: application/json
   - Accept: application/json
-- Body :
+
+Body :
 
 ```json
 {
@@ -317,7 +383,7 @@ Request :
 }
 ```
 
-- Response :
+Response :
 
 ```json
 {
@@ -342,7 +408,8 @@ Request :
 - Header :
   - Content-Type: application/json
   - Accept: application/json
-- Body :
+
+Body :
 
 ```json
 {
@@ -353,7 +420,7 @@ Request :
 }
 ```
 
-- Response :
+Response :
 
 ```json
 {
