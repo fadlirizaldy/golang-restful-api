@@ -4,19 +4,105 @@ This is golang rest API to do CRUD data
 
 Tools :
 
-- Golang (Echo Framework)
-- MySQL
-- Open API Swagger
+- [Golang (Echo Framework)](https://echo.labstack.com/)
+- [MySQL](https://dev.mysql.com/doc/)
+- [GraphQL (gqlgen)](https://gqlgen.com/)
+- [Open API Swagger](https://swagger.io/specification/)
 
 ---
 
-# Spec
+## How to Use
+
+This project contains 2 server, API server and GraphQL server for you query data visually.
+
+In the project directory, you can run:
+
+```bash
+# install package dependencies
+go mod tidy
+
+# Run API server
+go run server.go apiserver
+
+# Run GraphQL server
+go run server.go gqlserver
+
+# Testing Controller
+cd controller
+go test -v
+
+# note : don't forget to change .env based on your computer
+```
+
+---
+
+## Directory structure
+
+- `/config` - Configuration to connect mysql database.
+- `/constants` - Include constants variable.
+- `/controller` - Go files used for handle routes function to doing CRUD and testing.
+- `/graph` - Contains GraphQL schema, GQL model, and resolver.
+- `/helper` - Go files contains function to create some function to hashing password.
+- `/middleware` - Middleware to provide some function e.g. logger, trailing slash, and jwt.
+- `/model` - Contains model to create tables in the database.
+- `/router` - Path to sending some request in this server.
+- `/service` - Contains service for GraphQL server.
+
+---
+
+## GraphQL Query
+
+some GraphQL query, you can copy paste to the query field.
+
+```bash
+# Query for all movies
+query queryAll{
+  movies {
+    id
+    title
+    casts {
+      birthday
+      name
+    }
+  }
+}
+
+# Query For get movie with ID
+query queryById{
+  movie (id: "1") {
+    id
+    title
+    status
+    casts {
+      id
+      name
+      birthday
+    }
+  }
+}
+
+#Query for add new movie
+mutation addNewMovie{
+  createMovie(input: {
+    title: "Arti Bang Messi"
+    language: "Jakartans"
+    status: "Ongoing"
+    rating: 4.7
+  }) {
+    id
+  }
+}
+```
+
+---
+
+## API Spec
 
 To see the documentation with Swagger, please visit https://editor.swagger.io/ and put code in "spec.json" to it
 
----
+Here's the spec :
 
-## Get all casts
+### Get all casts
 
 Request :
 
@@ -44,7 +130,7 @@ Response :
 }
 ```
 
-## Get detail cast
+### Get detail cast
 
 Request :
 
@@ -65,7 +151,7 @@ Response :
 }
 ```
 
-## Create Cast
+### Create Cast
 
 Request :
 
@@ -101,7 +187,7 @@ Response :
 }
 ```
 
-## Update Cast
+### Update Cast
 
 Request :
 
@@ -137,7 +223,7 @@ Request :
 }
 ```
 
-## Delete Cast
+### Delete Cast
 
 Request :
 
@@ -156,7 +242,7 @@ Response :
 
 ---
 
-## Get all movies
+### Get all movies
 
 Request :
 
@@ -181,7 +267,7 @@ Request :
 }
 ```
 
-## Get detail movie
+### Get detail movie
 
 Request :
 
@@ -211,7 +297,7 @@ Response :
 }
 ```
 
-## Create Movie
+### Create Movie
 
 Request :
 
@@ -247,7 +333,7 @@ Request :
 }
 ```
 
-## Update Movie
+### Update Movie
 
 Request :
 
@@ -283,7 +369,7 @@ Request :
 }
 ```
 
-## Delete Cast
+### Delete Cast
 
 Request :
 

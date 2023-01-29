@@ -10,10 +10,29 @@ type Cast {
   rating: Int!
 }
 
+type Movie {
+  id: ID!
+  title: String!
+  language: String!
+  status: String!
+  rating: Float!
+  casts: [Cast!]!
+}
+
 type Query {
   casts: [Cast!]!
   cast(id: ID!): Cast!
   castDelete(id: ID!): Cast!
+  movies: [Movie!]!
+  movie(id: ID!): Movie!
+  movieDelete(id: ID!): Movie!
+}
+
+input MovieInput {
+  title: String!
+  language: String!
+  status: String!
+  rating: Float!
 }
 
 input CastInput {
@@ -26,4 +45,6 @@ input CastInput {
 type Mutation {
   createCast(input: CastInput!): Cast
   editCast(id: ID!, input: CastInput!): Cast
+  createMovie(input: MovieInput!): Movie
+  editMovie(id: ID!, input: MovieInput!): Movie
 }

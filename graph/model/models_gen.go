@@ -16,3 +16,19 @@ type CastInput struct {
 	Birthday   string `json:"birthday"`
 	Rating     int    `json:"rating"`
 }
+
+type Movie struct {
+	ID       string  `json:"id"`
+	Title    string  `json:"title"`
+	Language string  `json:"language"`
+	Status   string  `json:"status"`
+	Rating   float64 `json:"rating"`
+	Casts    []*Cast `json:"casts" gorm:"many2many:movie_casts"`
+}
+
+type MovieInput struct {
+	Title    string  `json:"title"`
+	Language string  `json:"language"`
+	Status   string  `json:"status"`
+	Rating   float64 `json:"rating"`
+}
